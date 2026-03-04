@@ -301,6 +301,13 @@ Additional recommended hardening:
   - chat via OpenRouter
   - transcription/embedding via OpenAI-compatible endpoint with those APIs.
 
+### `EMBEDDING_API_KEY (or OPENAI_API_KEY fallback) is not configured`
+
+- Set at least one key in `backend/.env`:
+  - `OPENAI_API_KEY=<your_key>` (shared fallback for all AI capabilities), or
+  - `EMBEDDING_API_KEY=<your_key>` (embedding-only override)
+- Restart the backend after editing `.env`.
+
 ### Windows PowerShell `npm.ps1` blocked
 
 - Run npm via `cmd /c npm ...` or adjust execution policy.
@@ -311,4 +318,3 @@ Additional recommended hardening:
 2. Add async background worker for transcription/embedding jobs.
 3. Add integration tests for AI endpoints and agent flows.
 4. Add token usage/cost tracking for AI operations.
-
