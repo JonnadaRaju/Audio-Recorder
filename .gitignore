@@ -5,3 +5,5 @@ logs/
 .env
 .env.local
 *.env
+.entire
+.opencode
