@@ -6,8 +6,26 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.database import get_db
 from app.core.config import settings
 from app.models.models import User
-from app.schemas.recording import RecordingResponse, RecordingListResponse
+from app.schemas.recording import (
+    RecordingResponse,
+    RecordingListResponse,
+    TranscriptResponse,
+    SearchRequest,
+    SearchResponse,
+    SearchResultItem,
+    SummaryResponse,
+    RecordingQuestionRequest,
+    RecordingQuestionResponse,
+)
 from app.services.auth_service import get_current_user
+from app.services.ai_service import (
+    AIServiceError,
+    transcribe_and_store_recording,
+    semantic_search_recordings,
+    summarize_text,
+    answer_question,
+    build_context_chunks,
+)
 from app.services.recording_service import (
     save_audio_file,
     create_recording,
@@ -131,4 +149,125 @@ async def stream_recording(
         path=recording.file_path,
         media_type="audio/webm",
         filename=recording.filename
+    )
+
+
+@router.post("/{recording_id}/transcribe", response_model=TranscriptResponse)
+async def transcribe_recording(
+    recording_id: int,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    recording = await get_recording(db, recording_id, current_user.id)
+    if not recording:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Recording not found",
+        )
+
+    try:
+        if not recording.transcript:
+            recording = await transcribe_and_store_recording(db, recording)
+    except AIServiceError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=str(exc),
+        )
+
+    transcript_preview = recording.transcript[:240] if recording.transcript else ""
+    return TranscriptResponse(
+        recording_id=recording.id,
+        transcript=recording.transcript or "",
+        transcript_preview=transcript_preview,
+    )
+
+
+@router.post("/search", response_model=SearchResponse)
+async def search_recordings(
+    request: SearchRequest,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    try:
+        matches = await semantic_search_recordings(
+            db=db,
+            user_id=current_user.id,
+            query=request.query,
+            limit=request.limit,
+        )
+    except AIServiceError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(exc),
+        )
+
+    results = [
+        SearchResultItem(
+            id=recording.id,
+            filename=recording.filename,
+            duration=recording.duration,
+            created_at=recording.created_at,
+            transcript_preview=(recording.transcript or "")[:240],
+        )
+        for recording in matches
+    ]
+
+    return SearchResponse(
+        query=request.query,
+        total_matches=len(results),
+        results=results,
+    )
+
+
+@router.post("/{recording_id}/summarize", response_model=SummaryResponse)
+async def summarize_recording(
+    recording_id: int,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    recording = await get_recording(db, recording_id, current_user.id)
+    if not recording:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Recording not found",
+        )
+
+    try:
+        if not recording.transcript:
+            recording = await transcribe_and_store_recording(db, recording)
+        summary = summarize_text(recording.transcript or "")
+    except AIServiceError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(exc),
+        )
+
+    return SummaryResponse(recording_id=recording.id, summary=summary)
+
+
+@router.post("/answer", response_model=RecordingQuestionResponse)
+async def answer_question_about_recordings(
+    request: RecordingQuestionRequest,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    try:
+        matches = await semantic_search_recordings(
+            db=db,
+            user_id=current_user.id,
+            query=request.question,
+            limit=request.limit or 5,
+        )
+        context = build_context_chunks(matches)
+        final_answer = answer_question(request.question, context)
+    except AIServiceError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(exc),
+        )
+
+    return RecordingQuestionResponse(
+        question=request.question,
+        answer=final_answer,
+        matched_recording_ids=[recording.id for recording in matches],
     )
