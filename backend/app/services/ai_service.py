@@ -9,7 +9,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
-from app.models.models import AudioRecording
+from app.models.models import AudioRecording, VECTOR_AVAILABLE
 from app.services.ai_guard import sanitize_user_text, detect_prompt_injection_attempt
 
 
@@ -208,6 +208,11 @@ async def semantic_search_recordings(
     query: str,
     limit: int | None = None,
 ) -> list[AudioRecording]:
+    if not VECTOR_AVAILABLE:
+        raise AIServiceError(
+            "Vector search is unavailable: pgvector package is not installed."
+        )
+
     sanitized_query = sanitize_user_text(query)
     if detect_prompt_injection_attempt(sanitized_query):
         raise AIServiceError("Search query blocked by prompt injection guard.")
