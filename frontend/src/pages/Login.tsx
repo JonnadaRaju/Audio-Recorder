@@ -1,17 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { apiService } from '../services/api';
 import './Auth.css';
 
 interface LoginProps {
   onLogin: () => void;
   onSwitchToRegister: () => void;
+  message?: string | null;
+  clearMessage?: () => void;
 }
 
-export const Login: React.FC<LoginProps> = ({ onLogin, onSwitchToRegister }) => {
+export const Login: React.FC<LoginProps> = ({
+  onLogin,
+  onSwitchToRegister,
+  message,
+  clearMessage
+}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!message || !clearMessage) {
+      return;
+    }
+    const timer = window.setTimeout(() => {
+      clearMessage();
+    }, 5000);
+    return () => window.clearTimeout(timer);
+  }, [message, clearMessage]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,6 +71,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin, onSwitchToRegister }) => 
               required
             />
           </div>
+          {message && <div className="success-message">{message}</div>}
           {error && <div className="error-message">{error}</div>}
           <button type="submit" disabled={loading}>
             {loading ? 'Logging in...' : 'Login'}
