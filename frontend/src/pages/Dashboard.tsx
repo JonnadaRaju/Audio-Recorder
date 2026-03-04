@@ -13,6 +13,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentlyPlaying, setCurrentlyPlaying] = useState<number | null>(null);
+  const [recordingName, setRecordingName] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const {
     isRecording,
@@ -63,24 +65,38 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
 
   const handleRecord = async () => {
     if (isRecording) {
+      const nameAtStop = recordingName;
       const blob = await stopRecording();
       if (blob) {
-        await uploadRecording(blob);
+        await uploadRecording(blob, nameAtStop);
       }
     } else {
       await startRecording();
     }
   };
 
-  const uploadRecording = async (blob: Blob) => {
+  const buildRecordingFilename = (name: string): string => {
+    const fallback = `recording_${Date.now()}`;
+    const trimmed = name.trim();
+    const base = trimmed.length > 0 ? trimmed : fallback;
+    const sanitized = base
+      .replace(/[<>:"/\\|?*\u0000-\u001F]/g, '')
+      .replace(/\s+/g, '_')
+      .slice(0, 80);
+    const safeBase = sanitized || fallback;
+    return safeBase.toLowerCase().endsWith('.webm') ? safeBase : `${safeBase}.webm`;
+  };
+
+  const uploadRecording = async (blob: Blob, customName: string) => {
     setUploading(true);
     setError(null);
 
     try {
-      const filename = `recording_${Date.now()}.webm`;
+      const filename = buildRecordingFilename(customName);
       const file = new File([blob], filename, { type: 'audio/webm' });
 
       await apiService.uploadRecording(file, recordingTime);
+      setRecordingName('');
       await fetchRecordings();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to upload recording');
@@ -144,6 +160,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
     return new Date(dateString).toLocaleString();
   };
 
+  const normalizedSearchQuery = searchQuery.trim().toLowerCase();
+  const filteredRecordings = normalizedSearchQuery
+    ? recordings.filter((recording) =>
+        recording.filename.toLowerCase().includes(normalizedSearchQuery)
+      )
+    : recordings;
+
   return (
     <div className="dashboard">
       <header className="dashboard-header">
@@ -152,6 +175,15 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
       </header>
 
       <div className="recorder-section">
+        <input
+          type="text"
+          className="recording-name-input"
+          placeholder="Recording name (optional)"
+          value={recordingName}
+          onChange={(e) => setRecordingName(e.target.value)}
+          disabled={isRecording || uploading}
+          maxLength={80}
+        />
         <button
           className={`record-btn ${isRecording ? 'recording' : ''}`}
           onClick={handleRecord}
@@ -159,6 +191,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
         >
           {isRecording ? 'Stop Recording' : 'Start Recording'}
         </button>
+        <div className="recording-name-hint">
+          Leave blank to use an automatic filename.
+        </div>
         {isRecording && (
           <div className="recording-time">
             {formatDuration(recordingTime)}
@@ -174,11 +209,25 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
 
       <div className="recordings-section">
         <h2>Your Recordings</h2>
+        <div className="recordings-toolbar">
+          <input
+            type="search"
+            className="search-input"
+            placeholder="Search recordings by name..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <span className="search-count">
+            {filteredRecordings.length} / {recordings.length}
+          </span>
+        </div>
         {recordings.length === 0 && !loading ? (
           <p className="no-recordings">No recordings yet. Click "Start Recording" to begin.</p>
+        ) : filteredRecordings.length === 0 ? (
+          <p className="no-recordings">No recordings match your search.</p>
         ) : (
           <div className="recordings-list">
-            {recordings.map((recording) => (
+            {filteredRecordings.map((recording) => (
               <div key={recording.id} className="recording-item">
                 <div className="recording-info">
                   <span className="filename">{recording.filename}</span>
@@ -208,4 +257,3 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
     </div>
   );
 };
-
