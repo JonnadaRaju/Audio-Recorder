@@ -10,7 +10,6 @@ export interface Recording {
   id: number;
   user_id: number;
   filename: string;
-  file_path: string;
   file_size: number;
   duration: number | null;
   created_at: string;
@@ -43,10 +42,10 @@ class ApiService {
     return this.token;
   }
 
-  private async request<T>(
+  private async requestRaw(
     endpoint: string,
     options: RequestInit = {}
-  ): Promise<T> {
+  ): Promise<Response> {
     const headers: HeadersInit = {
       ...options.headers,
     };
@@ -56,7 +55,7 @@ class ApiService {
       (headers as Record<string, string>)['Authorization'] = `Bearer ${token}`;
     }
 
-    if (!(options.body instanceof FormData)) {
+    if (options.body && !(options.body instanceof FormData)) {
       (headers as Record<string, string>)['Content-Type'] = 'application/json';
     }
 
@@ -69,6 +68,15 @@ class ApiService {
       const error = await response.json().catch(() => ({ detail: 'An error occurred' }));
       throw new Error(error.detail || `HTTP error! status: ${response.status}`);
     }
+
+    return response;
+  }
+
+  private async request<T>(
+    endpoint: string,
+    options: RequestInit = {}
+  ): Promise<T> {
+    const response = await this.requestRaw(endpoint, options);
 
     if (response.status === 204) {
       return {} as T;
@@ -85,10 +93,10 @@ class ApiService {
   }
 
   async login(email: string, password: string): Promise<{ access_token: string; token_type: string }> {
-    return this.request<{ access_token: string; token_type: string }>(
-      `/auth/login?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`,
-      { method: 'POST' }
-    );
+    return this.request<{ access_token: string; token_type: string }>('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password }),
+    });
   }
 
   async uploadRecording(file: File, duration?: number): Promise<Recording> {
@@ -122,9 +130,12 @@ class ApiService {
     });
   }
 
-  getStreamUrl(id: number): string {
-    const token = this.getToken();
-    return `${API_BASE_URL}/recordings/${id}/stream?token=${token}`;
+  async getRecordingAudioUrl(id: number): Promise<string> {
+    const response = await this.requestRaw(`/recordings/${id}/stream`, {
+      method: 'GET',
+    });
+    const blob = await response.blob();
+    return URL.createObjectURL(blob);
   }
 }
 
