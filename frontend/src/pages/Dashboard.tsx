@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { apiService, RecordingListItem } from '../services/api';
 import { useAudioRecorder } from '../hooks/useAudioRecorder';
 import './Dashboard.css';
@@ -23,6 +23,22 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
   } = useAudioRecorder();
   
   const currentAudioRef = useRef<HTMLAudioElement | null>(null);
+  const currentAudioUrlRef = useRef<string | null>(null);
+
+  const stopCurrentPlayback = useCallback((updateState = true) => {
+    if (currentAudioRef.current) {
+      currentAudioRef.current.pause();
+      currentAudioRef.current.onended = null;
+      currentAudioRef.current = null;
+    }
+    if (currentAudioUrlRef.current) {
+      URL.revokeObjectURL(currentAudioUrlRef.current);
+      currentAudioUrlRef.current = null;
+    }
+    if (updateState) {
+      setCurrentlyPlaying(null);
+    }
+  }, []);
 
   const fetchRecordings = async () => {
     try {
@@ -38,6 +54,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
   useEffect(() => {
     fetchRecordings();
   }, []);
+
+  useEffect(() => {
+    return () => {
+      stopCurrentPlayback(false);
+    };
+  }, [stopCurrentPlayback]);
 
   const handleRecord = async () => {
     if (isRecording) {
@@ -67,23 +89,28 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
     }
   };
 
-  const handlePlay = (recording: RecordingListItem) => {
+  const handlePlay = async (recording: RecordingListItem) => {
     if (currentlyPlaying === recording.id) {
-      currentAudioRef.current?.pause();
-      setCurrentlyPlaying(null);
-    } else {
-      if (currentAudioRef.current) {
-        currentAudioRef.current.pause();
-        currentAudioRef.current = null;
-      }
-      const audio = new Audio(apiService.getStreamUrl(recording.id));
+      stopCurrentPlayback();
+      return;
+    }
+
+    setError(null);
+    stopCurrentPlayback();
+
+    try {
+      const audioUrl = await apiService.getRecordingAudioUrl(recording.id);
+      const audio = new Audio(audioUrl);
       audio.onended = () => {
-        setCurrentlyPlaying(null);
-        currentAudioRef.current = null;
+        stopCurrentPlayback();
       };
-      audio.play();
+      await audio.play();
       currentAudioRef.current = audio;
+      currentAudioUrlRef.current = audioUrl;
       setCurrentlyPlaying(recording.id);
+    } catch (err) {
+      stopCurrentPlayback();
+      setError(err instanceof Error ? err.message : 'Failed to play recording');
     }
   };
 
