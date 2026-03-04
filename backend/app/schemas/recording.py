@@ -12,7 +12,6 @@ class RecordingResponse(BaseModel):
     id: int
     user_id: int
     filename: str
-    file_path: str
     file_size: int
     duration: int | None
     created_at: datetime
