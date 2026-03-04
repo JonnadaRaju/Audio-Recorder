@@ -5,7 +5,8 @@ from pathlib import Path
 from typing import Literal
 
 import requests
-from sqlalchemy import select
+from sqlalchemy import or_, select, text
+from sqlalchemy.exc import ProgrammingError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
@@ -56,6 +57,49 @@ def _provider_headers(kind: ProviderKind, include_json: bool = False) -> dict[st
         if settings.OPENROUTER_APP_NAME:
             headers["X-Title"] = settings.OPENROUTER_APP_NAME
     return headers
+
+
+async def _db_uses_vector_column(db: AsyncSession) -> bool:
+    try:
+        result = await db.execute(
+            text(
+                """
+                SELECT udt_name
+                FROM information_schema.columns
+                WHERE table_schema = current_schema()
+                  AND table_name = 'audio_recordings'
+                  AND column_name = 'transcript_embedding'
+                LIMIT 1
+                """
+            )
+        )
+        return result.scalar_one_or_none() == "vector"
+    except Exception:
+        return False
+
+
+async def _fallback_keyword_search(
+    db: AsyncSession,
+    user_id: int,
+    sanitized_query: str,
+    search_limit: int,
+) -> list[AudioRecording]:
+    tokens = [token for token in sanitized_query.split() if token]
+    patterns = [f"%{sanitized_query}%"] + [f"%{token}%" for token in tokens[:6]]
+    conditions = [AudioRecording.transcript.ilike(pattern) for pattern in patterns]
+
+    stmt = (
+        select(AudioRecording)
+        .where(
+            AudioRecording.user_id == user_id,
+            AudioRecording.transcript.is_not(None),
+            or_(*conditions),
+        )
+        .order_by(AudioRecording.created_at.desc())
+        .limit(search_limit)
+    )
+    result = await db.execute(stmt)
+    return list(result.scalars().all())
 
 
 def transcribe_file(file_path: str) -> str:
@@ -208,18 +252,18 @@ async def semantic_search_recordings(
     query: str,
     limit: int | None = None,
 ) -> list[AudioRecording]:
-    if not VECTOR_AVAILABLE:
-        raise AIServiceError(
-            "Vector search is unavailable: pgvector package is not installed."
-        )
-
     sanitized_query = sanitize_user_text(query)
     if detect_prompt_injection_attempt(sanitized_query):
         raise AIServiceError("Search query blocked by prompt injection guard.")
 
-    embedding = generate_embedding(sanitized_query)
     search_limit = min(limit or settings.VECTOR_SEARCH_LIMIT, 25)
+    if not VECTOR_AVAILABLE:
+        return await _fallback_keyword_search(db, user_id, sanitized_query, search_limit)
 
+    if not await _db_uses_vector_column(db):
+        return await _fallback_keyword_search(db, user_id, sanitized_query, search_limit)
+
+    embedding = generate_embedding(sanitized_query)
     stmt = (
         select(AudioRecording)
         .where(
@@ -229,8 +273,11 @@ async def semantic_search_recordings(
         .order_by(AudioRecording.transcript_embedding.cosine_distance(embedding))
         .limit(search_limit)
     )
-    result = await db.execute(stmt)
-    return list(result.scalars().all())
+    try:
+        result = await db.execute(stmt)
+        return list(result.scalars().all())
+    except ProgrammingError:
+        return await _fallback_keyword_search(db, user_id, sanitized_query, search_limit)
 
 
 async def fetch_recording_or_404(
