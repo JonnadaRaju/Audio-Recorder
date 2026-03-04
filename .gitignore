@@ -2,3 +2,6 @@ tmp/
 settings.local.json
 metadata/
 logs/
+.env
+.env.local
+*.env
