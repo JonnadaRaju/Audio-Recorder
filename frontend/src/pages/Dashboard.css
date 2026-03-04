@@ -63,6 +63,28 @@
   color: var(--console-text);
 }
 
+.recording-name-input {
+  width: 100%;
+  max-width: 420px;
+  margin-bottom: 0.85rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--console-border);
+  border-radius: 10px;
+  background: rgba(9, 14, 20, 0.82);
+  color: var(--console-text);
+  font-size: 0.95rem;
+}
+
+.recording-name-input:focus {
+  outline: none;
+  border-color: var(--console-accent-2);
+  box-shadow: 0 0 0 3px rgba(57, 182, 255, 0.16);
+}
+
+.recording-name-input::placeholder {
+  color: #8298ae;
+}
+
 .record-btn {
   padding: 1rem 2.6rem;
   font-size: 1.25rem;
@@ -109,6 +131,12 @@
   text-shadow: 0 0 14px rgba(37, 227, 164, 0.3);
 }
 
+.recording-name-hint {
+  margin-top: 0.6rem;
+  color: var(--console-muted);
+  font-size: 0.85rem;
+}
+
 .loading {
   margin-top: 1rem;
   font-size: 1rem;
@@ -127,6 +155,40 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   font-size: 1.05rem;
+}
+
+.recordings-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.search-input {
+  flex: 1;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--console-border);
+  border-radius: 10px;
+  background: rgba(10, 15, 22, 0.82);
+  color: var(--console-text);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--console-accent-2);
+  box-shadow: 0 0 0 3px rgba(57, 182, 255, 0.16);
+}
+
+.search-input::placeholder {
+  color: #8298ae;
+}
+
+.search-count {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.84rem;
+  color: var(--console-muted);
+  min-width: 70px;
+  text-align: right;
 }
 
 .no-recordings {
@@ -249,6 +311,20 @@
   .record-btn {
     width: 100%;
     max-width: 320px;
+  }
+
+  .recording-name-input {
+    max-width: 320px;
+  }
+
+  .recordings-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-count {
+    text-align: left;
+    min-width: auto;
   }
 
   .recording-item {
