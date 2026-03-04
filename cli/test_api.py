@@ -7,6 +7,11 @@ BASE_URL = "http://localhost:8000"
 cli = typer.Typer()
 
 
+@cli.callback()
+def main():
+    """CLI entrypoint for API acceptance tests."""
+
+
 class TestResult:
     def __init__(self, name: str, passed: bool, status_code: int, response: str):
         self.name = name
@@ -236,7 +241,7 @@ def test_delete_nonexistent_recording(token: str):
         return False
 
 
-@cli.command()
+@cli.command("run-tests")
 def run_tests():
     typer.echo("=" * 50)
     typer.echo("Running Audio Recorder API Tests")
