@@ -15,6 +15,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
   const [currentlyPlaying, setCurrentlyPlaying] = useState<number | null>(null);
   const [recordingName, setRecordingName] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [assistantQuery, setAssistantQuery] = useState('');
+  const [assistantLoading, setAssistantLoading] = useState(false);
+  const [assistantError, setAssistantError] = useState<string | null>(null);
+  const [assistantHistory, setAssistantHistory] = useState<
+    Array<{ query: string; answer: string; steps: Array<{ step: string; tool: string; output_preview: string }> }>
+  >([]);
 
   const {
     isRecording,
@@ -167,6 +173,37 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
       )
     : recordings;
 
+  const handleAskAssistant = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const question = assistantQuery.trim();
+    if (!question) {
+      return;
+    }
+
+    setAssistantLoading(true);
+    setAssistantError(null);
+    try {
+      const response = await apiService.askAgent(question);
+      setAssistantHistory((prev) => [
+        {
+          query: question,
+          answer: response.answer,
+          steps: response.steps.map((step) => ({
+            step: step.step,
+            tool: step.tool,
+            output_preview: step.output_preview,
+          })),
+        },
+        ...prev,
+      ]);
+      setAssistantQuery('');
+    } catch (err) {
+      setAssistantError(err instanceof Error ? err.message : 'Failed to query assistant');
+    } finally {
+      setAssistantLoading(false);
+    }
+  };
+
   return (
     <div className="dashboard">
       <header className="dashboard-header">
@@ -248,6 +285,44 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
                   >
                     Delete
                   </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="assistant-section">
+        <h2>AI Assistant</h2>
+        <form className="assistant-form" onSubmit={handleAskAssistant}>
+          <input
+            type="text"
+            className="assistant-input"
+            placeholder="Ask about your recordings..."
+            value={assistantQuery}
+            onChange={(e) => setAssistantQuery(e.target.value)}
+            disabled={assistantLoading}
+          />
+          <button className="assistant-btn" type="submit" disabled={assistantLoading}>
+            {assistantLoading ? 'Thinking...' : 'Ask'}
+          </button>
+        </form>
+        {assistantError && <div className="error-message">{assistantError}</div>}
+        {assistantHistory.length === 0 ? (
+          <p className="no-recordings">No assistant queries yet.</p>
+        ) : (
+          <div className="assistant-history">
+            {assistantHistory.map((item, idx) => (
+              <div key={`${item.query}-${idx}`} className="assistant-item">
+                <p className="assistant-query"><strong>Q:</strong> {item.query}</p>
+                <p className="assistant-answer"><strong>A:</strong> {item.answer}</p>
+                <div className="assistant-steps">
+                  {item.steps.map((step) => (
+                    <div key={`${idx}-${step.step}-${step.tool}`} className="assistant-step">
+                      <span className="assistant-step-tool">{step.tool}</span>
+                      <span className="assistant-step-preview">{step.output_preview}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             ))}
