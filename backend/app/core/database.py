@@ -47,8 +47,16 @@ async def init_db():
                 await conn.execute(
                     text(
                         "ALTER TABLE audio_recordings "
-                        "ADD COLUMN IF NOT EXISTS transcript_embedding JSONB"
+                        "ADD COLUMN IF NOT EXISTS transcript_embedding VECTOR(1536)"
                     )
                 )
-            except Exception as exc:
-                logger.warning("Could not patch AI columns on startup: %s", exc)
+            except Exception:
+                try:
+                    await conn.execute(
+                        text(
+                            "ALTER TABLE audio_recordings "
+                            "ADD COLUMN IF NOT EXISTS transcript_embedding JSONB"
+                        )
+                    )
+                except Exception as exc:
+                    logger.warning("Could not patch AI columns on startup: %s", exc)
