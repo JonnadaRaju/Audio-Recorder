@@ -13,7 +13,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentlyPlaying, setCurrentlyPlaying] = useState<number | null>(null);
-  
+
   const {
     isRecording,
     recordingTime,
@@ -22,7 +22,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
     error: recorderError
   } = useAudioRecorder();
   
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const currentAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const fetchRecordings = async () => {
     try {
@@ -69,13 +69,20 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
 
   const handlePlay = (recording: RecordingListItem) => {
     if (currentlyPlaying === recording.id) {
-      audioRef.current?.pause();
+      currentAudioRef.current?.pause();
       setCurrentlyPlaying(null);
     } else {
+      if (currentAudioRef.current) {
+        currentAudioRef.current.pause();
+        currentAudioRef.current = null;
+      }
       const audio = new Audio(apiService.getStreamUrl(recording.id));
-      audio.onended = () => setCurrentlyPlaying(null);
+      audio.onended = () => {
+        setCurrentlyPlaying(null);
+        currentAudioRef.current = null;
+      };
       audio.play();
-      audioRef.current = audio;
+      currentAudioRef.current = audio;
       setCurrentlyPlaying(recording.id);
     }
   };
