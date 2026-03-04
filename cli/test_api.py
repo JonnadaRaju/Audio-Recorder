@@ -3,6 +3,7 @@ import requests
 import sys
 import io
 from pathlib import Path
+import time
 
 BASE_URL = "http://localhost:8000"
 
@@ -25,6 +26,8 @@ class TestResult:
 
 
 results: list[TestResult] = []
+TEST_EMAIL = f"test{int(time.time())}@example.com"
+TEST_PASSWORD = "testpass123"
 
 
 def record_test(name: str, passed: bool, status_code: int, response: str):
@@ -35,7 +38,7 @@ def record_test(name: str, passed: bool, status_code: int, response: str):
 
 def test_valid_registration():
     url = f"{BASE_URL}/auth/register"
-    data = {"email": "test@example.com", "password": "testpass123"}
+    data = {"email": TEST_EMAIL, "password": TEST_PASSWORD}
     try:
         r = requests.post(url, json=data)
         passed = r.status_code == 201
@@ -48,7 +51,7 @@ def test_valid_registration():
 
 def test_duplicate_registration():
     url = f"{BASE_URL}/auth/register"
-    data = {"email": "test@example.com", "password": "testpass123"}
+    data = {"email": TEST_EMAIL, "password": TEST_PASSWORD}
     try:
         r = requests.post(url, json=data)
         passed = r.status_code == 400
@@ -74,7 +77,7 @@ def test_invalid_authentication():
 def test_valid_login():
     url = f"{BASE_URL}/auth/login"
     try:
-        r = requests.post(url, params={"email": "test@example.com", "password": "testpass123"})
+        r = requests.post(url, params={"email": TEST_EMAIL, "password": TEST_PASSWORD})
         passed = r.status_code == 200 and "access_token" in r.json()
         if passed:
             token = r.json()["access_token"]
