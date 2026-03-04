@@ -8,6 +8,7 @@ import './App.css';
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!apiService.getToken());
   const [showRegister, setShowRegister] = useState(false);
+  const [authMessage, setAuthMessage] = useState<string | null>(null);
 
   const handleLogin = () => {
     setIsAuthenticated(true);
@@ -19,10 +20,16 @@ function App() {
   };
 
   const handleSwitchToRegister = () => {
+    setAuthMessage(null);
     setShowRegister(true);
   };
 
   const handleSwitchToLogin = () => {
+    setShowRegister(false);
+  };
+
+  const handleRegisterSuccess = (message: string) => {
+    setAuthMessage(message);
     setShowRegister(false);
   };
 
@@ -31,9 +38,14 @@ function App() {
   }
 
   return showRegister ? (
-    <Register onRegister={handleLogin} onSwitchToLogin={handleSwitchToLogin} />
+    <Register onSwitchToLogin={handleSwitchToLogin} onRegisterSuccess={handleRegisterSuccess} />
   ) : (
-    <Login onLogin={handleLogin} onSwitchToRegister={handleSwitchToRegister} />
+    <Login
+      onLogin={handleLogin}
+      onSwitchToRegister={handleSwitchToRegister}
+      message={authMessage}
+      clearMessage={() => setAuthMessage(null)}
+    />
   );
 }
 
