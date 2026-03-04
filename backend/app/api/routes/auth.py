@@ -4,9 +4,8 @@ from sqlalchemy import select
 
 from app.core.database import get_db
 from app.core.security import get_password_hash, verify_password
-from app.core.config import settings
 from app.models.models import User
-from app.schemas.user import UserCreate, UserResponse, Token
+from app.schemas.user import LoginRequest, UserCreate, UserResponse, Token
 from app.services.auth_service import create_access_token
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
@@ -34,11 +33,11 @@ async def register(user_data: UserCreate, db: AsyncSession = Depends(get_db)):
 
 
 @router.post("/login", response_model=Token)
-async def login(email: str, password: str, db: AsyncSession = Depends(get_db)):
-    result = await db.execute(select(User).where(User.email == email))
+async def login(credentials: LoginRequest, db: AsyncSession = Depends(get_db)):
+    result = await db.execute(select(User).where(User.email == credentials.email))
     user = result.scalar_one_or_none()
     
-    if not user or not verify_password(password, user.password_hash):
+    if not user or not verify_password(credentials.password, user.password_hash):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password"
