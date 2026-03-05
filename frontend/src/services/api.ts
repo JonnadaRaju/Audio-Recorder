@@ -23,6 +23,27 @@ export interface RecordingListItem {
   created_at: string;
 }
 
+export interface VideoRecording {
+  id: number;
+  user_id: number;
+  filename: string;
+  file_size: number;
+  duration: number | null;
+  transcript: string | null;
+  summary: string | null;
+  created_at: string;
+}
+
+export interface VideoListItem {
+  id: number;
+  filename: string;
+  file_size: number;
+  duration: number | null;
+  transcript: string | null;
+  summary: string | null;
+  created_at: string;
+}
+
 export interface AgentStep {
   step: string;
   tool: string;
@@ -145,6 +166,45 @@ class ApiService {
 
   async getRecordingAudioUrl(id: number): Promise<string> {
     const response = await this.requestRaw(`/recordings/${id}/stream`, {
+      method: 'GET',
+    });
+    const blob = await response.blob();
+    return URL.createObjectURL(blob);
+  }
+
+  async uploadVideo(file: File, duration?: number): Promise<VideoRecording> {
+    const formData = new FormData();
+    formData.append('file', file);
+    if (duration !== undefined) {
+      formData.append('duration', duration.toString());
+    }
+
+    return this.request<VideoRecording>('/videos/upload', {
+      method: 'POST',
+      body: formData,
+    });
+  }
+
+  async getVideos(): Promise<VideoListItem[]> {
+    return this.request<VideoListItem[]>('/videos', {
+      method: 'GET',
+    });
+  }
+
+  async getVideo(id: number): Promise<VideoRecording> {
+    return this.request<VideoRecording>(`/videos/${id}`, {
+      method: 'GET',
+    });
+  }
+
+  async deleteVideo(id: number): Promise<void> {
+    return this.request<void>(`/videos/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async getVideoStreamUrl(id: number): Promise<string> {
+    const response = await this.requestRaw(`/videos/${id}/stream`, {
       method: 'GET',
     });
     const blob = await response.blob();
