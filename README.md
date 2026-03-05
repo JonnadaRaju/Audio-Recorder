@@ -69,24 +69,55 @@ The system allows authenticated users to:
 
 ```text
 agent/                         # MCP-connected agent orchestration
+  __init__.py
+  mcp_agent.py
 backend/
   app/
     api/routes/                # auth, recordings, agent routes
+      auth.py
+      recordings.py
+      agent.py
     core/                      # config, database, security
+      config.py
+      database.py
+      security.py
     models/                    # SQLAlchemy models
+      models.py
     schemas/                   # Pydantic schemas
+      user.py
+      recording.py
+      agent.py
     services/                  # auth, recording, AI, agent services
+      auth_service.py
+      recording_service.py
+      ai_service.py
+      agent_service.py
+      ai_guard.py
+    main.py
   migrations/                  # SQL migration for AI extensions
   API_CONTRACT_AI.md           # AI endpoint contracts
 cli/
   test_api.py                  # acceptance tests
   ai_cli.py                    # AI-focused CLI commands
+  requirements.txt
 frontend/
   src/
-    pages/Dashboard.tsx        # recorder + recordings + assistant UI
-    services/api.ts            # frontend API client
+    pages/                     # UI pages
+      Dashboard.tsx
+      Dashboard.css
+      Login.tsx
+      Register.tsx
+      Auth.css
+    services/                  # frontend API client
+      api.ts
+    App.tsx
+    App.css
+    index.tsx
+    useAudioRecorder.ts        # audio recording hook
 mcp_server/
   server.py                    # MCP tool server
+  requirements.txt
+  README.md
 ```
 
 ## 4) Core Features
