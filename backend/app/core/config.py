@@ -15,6 +15,11 @@ class Settings(BaseSettings):
     MAX_VIDEO_FILE_SIZE_MB: int = 500
     FFMPEG_BINARY: str = "ffmpeg"
     EXTRACTED_AUDIO_DIR: str = "uploads/extracted_audio"
+    USE_LOCAL_WHISPER: bool = False
+    LOCAL_WHISPER_MODEL: str = "small"
+    LOCAL_WHISPER_DEVICE: str = "cpu"
+    LOCAL_WHISPER_COMPUTE_TYPE: str = "int8"
+    LOCAL_WHISPER_BEAM_SIZE: int = 5
 
     OPENAI_API_KEY: str | None = None
     OPENAI_BASE_URL: str = "https://api.openai.com/v1"
