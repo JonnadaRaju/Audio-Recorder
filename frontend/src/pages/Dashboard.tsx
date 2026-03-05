@@ -86,17 +86,38 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
 
   const fetchMediaLibrary = async () => {
     try {
-      const [audioData, videoData] = await Promise.all([
+      const [audioResult, videoResult] = await Promise.allSettled([
         apiService.getRecordings(),
         apiService.getVideos(),
       ]);
-      setRecordings(audioData);
-      setVideos(videoData);
+
+      const errors: string[] = [];
+
+      if (audioResult.status === 'fulfilled') {
+        setRecordings(audioResult.value);
+      } else {
+        errors.push(audioResult.reason instanceof Error ? audioResult.reason.message : 'Failed to load audio recordings');
+      }
+
+      if (videoResult.status === 'fulfilled') {
+        setVideos(videoResult.value);
+      } else {
+        errors.push(videoResult.reason instanceof Error ? videoResult.reason.message : 'Failed to load videos');
+      }
+
+      if (errors.length > 0) {
+        setError(errors.join(' | '));
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch media library');
     } finally {
       setLoading(false);
     }
+  };
+
+  const refreshVideos = async () => {
+    const videoData = await apiService.getVideos();
+    setVideos(videoData);
   };
 
   useEffect(() => {
@@ -200,7 +221,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
       const file = new File([blob], filename, { type: fileType });
       await apiService.uploadVideo(file, durationSeconds || undefined);
       setVideoName('');
-      await fetchMediaLibrary();
+      await refreshVideos();
       return true;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to upload video');
@@ -215,6 +236,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
     const durationAtStop = videoRecordingTime;
     const blob = await stopVideoRecording();
     if (!blob) {
+      setError('No video data captured. Record for a bit longer and try again.');
       return;
     }
 
@@ -307,7 +329,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
       if (currentlyPlayingVideo === id) {
         stopCurrentVideoPlayback();
       }
-      await fetchMediaLibrary();
+      await refreshVideos();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to delete video');
     }
