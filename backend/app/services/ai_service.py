@@ -7,6 +7,7 @@ import shutil
 import subprocess
 import uuid
 import base64
+from functools import lru_cache
 from pathlib import Path
 from typing import Literal
 
@@ -186,6 +187,40 @@ def _audio_format_from_path(path: Path) -> str:
     if suffix in {"mp3", "mp4", "mpeg", "mpga", "m4a", "wav", "webm", "ogg"}:
         return suffix
     return "wav"
+
+
+@lru_cache(maxsize=1)
+def _get_local_whisper_model() -> object:
+    try:
+        from faster_whisper import WhisperModel  # type: ignore
+    except ModuleNotFoundError as exc:
+        raise AIServiceError(
+            "Local Whisper is enabled but faster-whisper is not installed. "
+            "Install it with: pip install faster-whisper"
+        ) from exc
+
+    return WhisperModel(
+        settings.LOCAL_WHISPER_MODEL,
+        device=settings.LOCAL_WHISPER_DEVICE,
+        compute_type=settings.LOCAL_WHISPER_COMPUTE_TYPE,
+    )
+
+
+def _transcribe_with_local_whisper(path: Path) -> str:
+    model = _get_local_whisper_model()
+    try:
+        segments, _ = model.transcribe(
+            str(path),
+            beam_size=max(1, int(settings.LOCAL_WHISPER_BEAM_SIZE)),
+        )
+        transcript = " ".join(segment.text.strip() for segment in segments if segment.text).strip()
+    except Exception as exc:
+        raise AIServiceError(f"Local Whisper transcription failed: {exc}") from exc
+
+    sanitized = sanitize_user_text(transcript)
+    if not sanitized:
+        raise AIServiceError("Local Whisper transcription returned empty text.")
+    return sanitized
 
 
 def _transcribe_via_chat_audio_input(path: Path, model_override: str | None = None) -> str:
@@ -409,6 +444,9 @@ def transcribe_file(file_path: str, mime_type: str | None = None) -> str:
     path = Path(file_path)
     if not path.exists():
         raise AIServiceError("Recording file was not found on disk.")
+
+    if settings.USE_LOCAL_WHISPER:
+        return _transcribe_with_local_whisper(path)
 
     _, base_url, model = _provider_config("transcription")
     model = _normalize_openrouter_model(model, base_url)
