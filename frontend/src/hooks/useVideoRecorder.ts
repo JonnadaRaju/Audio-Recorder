@@ -127,6 +127,13 @@ export function useVideoRecorder(): UseVideoRecorderReturn {
         finalize();
       };
 
+      // Flush any buffered media before stopping so short recordings still produce a blob.
+      try {
+        recorder.requestData();
+      } catch {
+        // Safe no-op when recorder cannot flush buffered data in current state.
+      }
+
       recorder.stop();
     });
   }, [cleanupRecordingState, stopStream]);
