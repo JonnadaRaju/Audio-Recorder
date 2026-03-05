@@ -39,12 +39,16 @@ class Settings(BaseSettings):
     CHAT_BASE_URL: str | None = None
     CHAT_MODEL: str | None = None
 
+    OPENROUTER_API_KEY: str | None = None
+    OPENROUTER_BASE_URL: str | None = None
+    OPENROUTER_MODEL: str | None = None
     GROQ_API_KEY: str | None = None
     GROQ_BASE_URL: str = "https://api.groq.com/openai/v1"
     GROQ_MODEL: str = "llama-3.3-70b-versatile"
 
     OPENROUTER_SITE_URL: str | None = None
     OPENROUTER_APP_NAME: str | None = None
+    OPENROUTER_AUDIO_INPUT_MODEL: str = "openai/gpt-audio-mini"
     DEFAULT_SUMMARY_MAX_WORDS: int = 120
     VECTOR_SEARCH_LIMIT: int = 10
     MIN_SEARCH_SIMILARITY: float = 0.2
