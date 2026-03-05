@@ -1,0 +1,345 @@
+You are an expert AI systems architect, backend engineer, and agent orchestration specialist.
+
+Existing System:
+AI Audio Assistant with Agents + MCP Server.
+
+The system already includes:
+
+Backend:
+FastAPI backend with JWT authentication.
+
+Database:
+PostgreSQL with async SQLAlchemy and pgvector.
+
+Current features:
+- User authentication
+- Audio recording upload
+- Audio storage in /uploads/audio
+- Metadata storage
+- Audio streaming
+- Transcription
+- Summarization
+- Vector search
+- AI agent with MCP tools
+- CLI testing
+- React frontend with recording + playback
+- AI assistant chat interface
+
+Current Entities:
+
+User
+- id
+- email
+- password_hash
+- created_at
+
+AudioRecording
+- id
+- user_id
+- filename
+- file_path
+- file_size
+- duration
+- transcript
+- transcript_embedding
+- created_at
+
+Goal of this task:
+Extend the existing system to support **video recording, video processing, and AI-powered video understanding** while preserving the existing audio pipeline.
+
+The AI assistant must be able to:
+- store video recordings
+- extract audio from videos
+- transcribe video speech
+- summarize video recordings
+- search across video transcripts
+- answer questions about videos
+
+Tech Stack for Video Layer:
+
+Video Processing:
+FFmpeg
+
+Speech-to-text:
+Sarvam AI
+
+LLM for reasoning and summaries:
+Groq
+
+Vector search:
+pgvector
+
+Agent tools:
+MCP Server
+
+Agent orchestration:
+LangGraph or tool-calling agent
+
+-----------------------------------------------------
+
+PHASE 1 — Backend Video Support
+
+Extend the FastAPI backend to support video recordings.
+
+Add a new entity:
+
+VideoRecording
+
+Fields:
+
+- id
+- user_id
+- filename
+- file_path
+- file_size
+- duration
+- transcript
+- transcript_embedding
+- summary
+- created_at
+
+Video files should be stored in:
+
+/uploads/videos/
+
+Add endpoints:
+
+POST   /videos/upload
+GET    /videos
+GET    /videos/{id}
+DELETE /videos/{id}
+GET    /videos/{id}/stream
+
+Video upload flow:
+
+1. Upload video file
+2. Store metadata
+3. Save video in uploads/videos
+
+-----------------------------------------------------
+
+PHASE 2 — Video Processing Pipeline
+
+Implement a processing pipeline:
+
+Step 1
+Extract audio from video using FFmpeg.
+
+Example:
+
+ffmpeg -i video.mp4 audio.wav
+
+Step 2
+Send extracted audio to Sarvam AI speech-to-text API.
+
+Store transcript in database.
+
+Step 3
+Generate transcript embeddings using embedding model.
+
+Store embeddings in pgvector.
+
+Step 4
+Generate summary using Groq LLM.
+
+Store summary.
+
+Add endpoints:
+
+POST /videos/{id}/transcribe
+POST /videos/{id}/summarize
+POST /videos/search
+
+-----------------------------------------------------
+
+PHASE 3 — MCP Tool Extensions
+
+Extend the MCP server to include video tools.
+
+Existing audio tools must remain.
+
+Add tools:
+
+list_videos
+
+Input:
+user_id
+
+Output:
+list of video recordings.
+
+get_video_metadata
+
+Input:
+video_id
+
+Output:
+filename
+duration
+size
+created_at
+
+transcribe_video
+
+Input:
+video_id
+
+Process:
+extract audio
+send to Sarvam AI
+
+Output:
+transcript
+
+summarize_video
+
+Input:
+video_id
+
+Output:
+summary
+
+search_videos
+
+Input:
+query text
+
+Process:
+vector similarity search on transcripts
+
+Output:
+matching videos
+
+answer_question_about_videos
+
+Input:
+natural language question
+
+Process:
+- search transcripts
+- retrieve relevant context
+- generate final answer using Groq
+
+Each MCP tool must:
+- validate user ownership
+- return structured outputs
+- handle errors safely
+- prevent prompt injection
+
+-----------------------------------------------------
+
+PHASE 4 — AI Agent Extension
+
+Extend the AI agent so it can reason about both audio and video recordings.
+
+Agent must detect intent:
+
+Examples:
+
+"Summarize my latest video."
+
+"What did I say about deadlines in my videos?"
+
+"Show my recent recordings."
+
+Agent workflow example:
+
+User query:
+"Summarize my latest video"
+
+Agent steps:
+
+1 call list_videos
+2 select latest video
+3 call transcribe_video
+4 call summarize_video
+5 return summary
+
+Agent must be able to combine audio and video search results.
+
+-----------------------------------------------------
+
+PHASE 5 — CLI Extensions
+
+Extend CLI test client with new commands:
+
+cli upload-video
+cli list-videos
+cli transcribe-video
+cli summarize-video
+cli search-videos
+cli ask-agent
+
+CLI should display:
+
+- tool calls
+- reasoning steps
+- responses
+- PASS / FAIL results
+
+-----------------------------------------------------
+
+PHASE 6 — Frontend Video Support
+
+Extend React frontend.
+
+Add features:
+
+Video Recording
+
+Use MediaRecorder API to record video + audio.
+
+Add buttons:
+
+Start Recording
+Stop Recording
+Upload
+
+Video List Page
+
+Display:
+
+- filename
+- duration
+- size
+- created_at
+
+Video Playback
+
+Use HTML5 video player.
+
+AI Assistant Chat
+
+Users can ask:
+
+"What did I say in yesterday's video?"
+
+"Summarize my meeting video."
+
+The chat interface sends queries to the AI agent.
+
+-----------------------------------------------------
+
+PHASE 7 — Security and Safety
+
+Review:
+
+- video upload validation
+- file size limits
+- MIME type validation
+- prompt injection protection
+- MCP tool access control
+- unauthorized video access
+
+-----------------------------------------------------
+
+OUTPUT STRUCTURE
+
+1. Updated system architecture
+2. Database schema updates
+3. FastAPI backend video extensions
+4. Video processing pipeline
+5. MCP server video tools
+6. AI agent updates
+7. CLI extensions
+8. React frontend video features
