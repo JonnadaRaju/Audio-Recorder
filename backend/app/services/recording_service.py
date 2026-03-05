@@ -10,7 +10,7 @@ from app.models.models import AudioRecording
 
 
 async def save_audio_file(file_content: bytes, user_id: int) -> tuple[str, str]:
-    upload_dir = Path(settings.UPLOAD_DIR) / str(user_id)
+    upload_dir = Path(settings.UPLOAD_AUDIO_DIR or settings.UPLOAD_DIR) / str(user_id)
     upload_dir.mkdir(parents=True, exist_ok=True)
     
     filename = f"{uuid.uuid4()}.webm"
