@@ -54,6 +54,7 @@ class Settings(BaseSettings):
     OPENROUTER_SITE_URL: str | None = None
     OPENROUTER_APP_NAME: str | None = None
     OPENROUTER_AUDIO_INPUT_MODEL: str = "openai/gpt-audio-mini"
+    USE_PGVECTOR: bool = True
     DEFAULT_SUMMARY_MAX_WORDS: int = 120
     VECTOR_SEARCH_LIMIT: int = 10
     MIN_SEARCH_SIMILARITY: float = 0.2
