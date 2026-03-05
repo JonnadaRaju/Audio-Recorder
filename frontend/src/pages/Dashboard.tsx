@@ -111,11 +111,21 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
   }, [stopCurrentAudioPlayback, stopCurrentVideoPlayback]);
 
   useEffect(() => {
-    if (!liveVideoPreviewRef.current) {
+    const videoEl = liveVideoPreviewRef.current;
+    if (!videoEl) {
       return;
     }
 
-    liveVideoPreviewRef.current.srcObject = previewStream;
+    videoEl.srcObject = previewStream;
+
+    if (previewStream) {
+      const playPromise = videoEl.play();
+      if (playPromise) {
+        playPromise.catch(() => {
+          // Ignore autoplay interruption errors; user interaction already started recording.
+        });
+      }
+    }
   }, [previewStream]);
 
   useEffect(() => {
@@ -180,10 +190,38 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
     await startVideoRecording();
   };
 
+  const uploadVideoBlob = async (blob: Blob, customName: string, durationSeconds?: number): Promise<boolean> => {
+    setUploadingVideo(true);
+    setError(null);
+
+    try {
+      const filename = buildFilename(customName, 'video', '.webm');
+      const fileType = blob.type || 'video/webm';
+      const file = new File([blob], filename, { type: fileType });
+      await apiService.uploadVideo(file, durationSeconds || undefined);
+      setVideoName('');
+      await fetchMediaLibrary();
+      return true;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to upload video');
+      return false;
+    } finally {
+      setUploadingVideo(false);
+    }
+  };
+
   const handleStopVideo = async () => {
+    const nameAtStop = videoName;
+    const durationAtStop = videoRecordingTime;
     const blob = await stopVideoRecording();
-    if (blob) {
-      setPendingVideoBlob(blob);
+    if (!blob) {
+      return;
+    }
+
+    setPendingVideoBlob(blob);
+    const uploaded = await uploadVideoBlob(blob, nameAtStop, durationAtStop);
+    if (uploaded) {
+      setPendingVideoBlob(null);
     }
   };
 
@@ -192,21 +230,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
       return;
     }
 
-    setUploadingVideo(true);
-    setError(null);
-
-    try {
-      const filename = buildFilename(videoName, 'video', '.webm');
-      const fileType = pendingVideoBlob.type || 'video/webm';
-      const file = new File([pendingVideoBlob], filename, { type: fileType });
-      await apiService.uploadVideo(file, videoRecordingTime || undefined);
-      setVideoName('');
+    const uploaded = await uploadVideoBlob(pendingVideoBlob, videoName, videoRecordingTime);
+    if (uploaded) {
       setPendingVideoBlob(null);
-      await fetchMediaLibrary();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to upload video');
-    } finally {
-      setUploadingVideo(false);
     }
   };
 
@@ -399,6 +425,9 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
             {uploadingVideo ? 'Uploading...' : 'Upload'}
           </button>
         </div>
+        <div className="recording-name-hint">
+          Video uploads automatically when you stop. Use Upload only to retry a failed upload.
+        </div>
 
         {isVideoRecording && <div className="recording-time">{formatDuration(videoRecordingTime)}</div>}
 
@@ -411,8 +440,10 @@ export const Dashboard: React.FC<DashboardProps> = ({ onLogout }) => {
         )}
       </div>
 
-      {(uploadingAudio || loading) && (
-        <div className="loading">{uploadingAudio ? 'Uploading audio...' : 'Loading media...'}</div>
+      {(uploadingAudio || uploadingVideo || loading) && (
+        <div className="loading">
+          {uploadingAudio ? 'Uploading audio...' : uploadingVideo ? 'Uploading video...' : 'Loading media...'}
+        </div>
       )}
       {(error || recorderError || videoRecorderError) && (
         <div className="error-message">{error || recorderError || videoRecorderError}</div>
