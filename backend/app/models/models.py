@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text, JSON
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
+from app.core.config import settings
 from app.core.database import Base
 
 try:
@@ -13,9 +14,8 @@ except ModuleNotFoundError:
 
 
 def _embedding_column_type():
-    if VECTOR_AVAILABLE and Vector is not None:
+    if settings.USE_PGVECTOR and VECTOR_AVAILABLE and Vector is not None:
         return Vector(1536)
-    # Fallback keeps app bootable when pgvector package is unavailable.
     return JSON
 
 
