@@ -137,6 +137,30 @@
   font-size: 0.85rem;
 }
 
+.recorder-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 1.1rem;
+}
+
+.recorder-tab-btn {
+  padding: 0.6rem 1.6rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--console-text);
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.recorder-tab-btn.active {
+  border-color: var(--console-accent);
+  background: linear-gradient(90deg, var(--console-accent), var(--console-accent-2));
+  color: #03101a;
+}
+
 .recorder-section h2 {
   margin-bottom: 0.9rem;
   text-transform: uppercase;
