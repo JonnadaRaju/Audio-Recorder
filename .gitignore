@@ -19,4 +19,7 @@ uploads/
 frontend/node_modules/
 
 backend/.venv/
+backend/venv/
 mcp_server/.venv/
+.venv/
+frontend/build/
