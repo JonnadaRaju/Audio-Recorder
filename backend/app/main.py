@@ -21,8 +21,10 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
-    allow_credentials=True,
+    # Token auth is passed via Authorization header, not cookies.
+    # Keeping credentials disabled allows wildcard CORS for simpler local/dev access.
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
