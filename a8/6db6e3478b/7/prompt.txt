@@ -1,0 +1,112 @@
+Fix the left panel (.auth-left) styling in Auth.css only. 
+Do not touch any TSX logic.
+
+1. LAYOUT — vertically distribute content:
+   .auth-left {
+     display: flex;
+     flex-direction: column;
+     justify-content: space-between;
+     padding: 3rem 2.5rem;
+   }
+
+2. HEADLINE — fix font and size:
+   .auth-left h2, .auth-left .auth-headline {
+     font-family: 'DM Sans', sans-serif;
+     font-size: 2.2rem;
+     font-weight: 800;
+     line-height: 1.2;
+     color: #ffffff;
+     letter-spacing: -0.02em;
+   }
+
+3. SUBTEXT:
+   .auth-left .auth-subtext {
+     font-size: 0.92rem;
+     color: rgba(255,255,255,0.65);
+     line-height: 1.6;
+     margin-top: 0.75rem;
+     max-width: 340px;
+   }
+
+4. FEATURE PILLS — make them cleaner:
+   .feature-item {
+     background: rgba(255,255,255,0.15);
+     border: 1px solid rgba(255,255,255,0.25);
+     backdrop-filter: blur(8px);
+     border-radius: 999px;
+     padding: 0.5rem 1.1rem;
+     font-size: 0.84rem;
+     font-weight: 500;
+     color: #ffffff;
+     display: inline-flex;
+     align-items: center;
+     gap: 0.5rem;
+     width: fit-content;
+   }
+   .feature-list {
+     margin-top: 2rem;
+     display: flex;
+     flex-direction: column;
+     gap: 0.65rem;
+   }
+
+5. ADD a mock visual card at the bottom of .auth-left 
+   to fill the empty space. Add a new div .mock-visual 
+   in Login.tsx and Register.tsx inside .auth-left, 
+   just above the copyright line:
+
+   <div class="mock-visual">
+     <div class="mock-bar"></div>
+     <div class="mock-bar short"></div>
+     <div class="mock-wave">
+       <div class="wave-block"></div>
+       <div class="wave-block tall"></div>
+       <div class="wave-block medium"></div>
+       <div class="wave-block tall"></div>
+       <div class="wave-block short"></div>
+       <div class="wave-block medium"></div>
+       <div class="wave-block tall"></div>
+       <div class="wave-block"></div>
+     </div>
+   </div>
+
+   Style in Auth.css:
+   .mock-visual {
+     background: rgba(255,255,255,0.1);
+     border: 1px solid rgba(255,255,255,0.18);
+     border-radius: 18px;
+     padding: 1.4rem 1.6rem;
+     margin-top: 2.5rem;
+     backdrop-filter: blur(10px);
+   }
+   .mock-bar {
+     height: 10px;
+     background: rgba(255,255,255,0.5);
+     border-radius: 999px;
+     margin-bottom: 0.6rem;
+     width: 70%;
+   }
+   .mock-bar.short { width: 45%; background: rgba(255,255,255,0.3); }
+   .mock-wave {
+     display: flex;
+     align-items: flex-end;
+     gap: 5px;
+     margin-top: 1rem;
+     height: 48px;
+   }
+   .wave-block {
+     flex: 1;
+     background: rgba(255,255,255,0.55);
+     border-radius: 4px;
+     height: 40%;
+   }
+   .wave-block.tall  { height: 100%; background: rgba(255,255,255,0.8); }
+   .wave-block.medium { height: 65%; }
+   .wave-block.short { height: 25%; }
+
+6. COPYRIGHT:
+   .auth-left .auth-copyright {
+     font-size: 0.72rem;
+     color: rgba(255,255,255,0.35);
+     margin-top: 1.5rem;
+   }
