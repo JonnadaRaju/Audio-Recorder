@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.4.9",
+  "checkpoint_id": "e63a42d5e4b8",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 0,
+  "files_touched": [
+    "backend/app/services/oauth_service.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/e6/3a42d5e4b8/0/metadata.json",
+      "transcript": "/e6/3a42d5e4b8/0/full.jsonl",
+      "context": "/e6/3a42d5e4b8/0/context.md",
+      "content_hash": "/e6/3a42d5e4b8/0/content_hash.txt",
+      "prompt": "/e6/3a42d5e4b8/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 2935,
+    "cache_creation_tokens": 14863,
+    "cache_read_tokens": 216976,
+    "output_tokens": 1297,
+    "api_call_count": 19
+  }
+}

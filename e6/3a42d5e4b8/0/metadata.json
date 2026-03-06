@@ -1,0 +1,30 @@
+{
+  "cli_version": "0.4.9",
+  "checkpoint_id": "e63a42d5e4b8",
+  "session_id": "ses_33e5ff328ffeBsr6pqdzmaEfhW",
+  "strategy": "manual-commit",
+  "created_at": "2026-03-06T05:45:30.533143724Z",
+  "branch": "main",
+  "checkpoints_count": 0,
+  "files_touched": [
+    "backend/app/services/oauth_service.py"
+  ],
+  "agent": "OpenCode",
+  "turn_id": "e3097a88008d",
+  "token_usage": {
+    "input_tokens": 2935,
+    "cache_creation_tokens": 14863,
+    "cache_read_tokens": 216976,
+    "output_tokens": 1297,
+    "api_call_count": 19
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-03-06T05:45:30.427041177Z",
+    "agent_lines": 145,
+    "human_added": 1146,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 1291,
+    "agent_percentage": 11.23160340821069
+  }
+}
