@@ -1,0 +1,121 @@
+Redesign Auth.css completely. Keep all existing class names unchanged.
+Implement a two-column split-screen layout for .auth-container.
+
+=== LEFT COLUMN (.auth-left) — add this new element in Login.tsx and Register.tsx ===
+- Width: 40%, min-height: 100vh
+- Background: linear-gradient(160deg, #0a6b6b, #0e9090, #1aadad)
+- Subtle diagonal line texture: repeating-linear-gradient at 45deg, 
+  rgba(255,255,255,0.04) 1px, transparent 1px, background-size 28px 28px
+- White bold headline: "Start Creating Impact Right Away", font-size 2rem, 
+  font-weight 800, line-height 1.2
+- Small grey-white subtext below, font-size 0.85rem, opacity 0.65
+- A floating white card (.mock-card) in lower half: background white, 
+  border-radius 16px, padding 1rem, box-shadow 0 20px 60px rgba(0,0,0,0.25), 
+  transform rotate(-3deg), contains a placeholder dashboard image or grey blocks
+- 4-5 floating pill badges scattered: white background, border-radius 999px, 
+  padding 0.3rem 0.8rem, font-size 0.72rem, font-weight 600, box-shadow small, 
+  absolute positioned around the mock card — labels: "Slack", "Google Ads", 
+  "Zendesk", "Shopify"
+- Copyright line at bottom: "© 2025. All Rights Reserved", 
+  font-size 0.72rem, opacity 0.4, color white
+
+=== RIGHT COLUMN (.auth-right) ===
+- Width: 60%, background: #f4f6f8
+- Display flex, center content both axes
+
+=== AUTH CARD (.auth-card) ===
+- Background: #ffffff
+- Border: 1px solid #e5e7eb
+- Border-radius: 20px
+- Padding: 2.5rem 2.25rem
+- Max-width: 400px, width: 100%
+- Box-shadow: 0 4px 32px rgba(0,0,0,0.07)
+- NO dark background, NO gradients on the card itself
+
+=== LOGO (.auth-logo) — new element ===
+- Small circle, 48px, centered, margin-bottom 1rem
+- Background: linear-gradient(135deg, #0e9090, #38b8d0)
+- Display flex, align/justify center
+- Contains initials "AR" in white, font-weight 700, font-size 0.85rem
+
+=== HEADING (.auth-card h2) ===
+- Font: 'Plus Jakarta Sans' or 'DM Sans' from Google Fonts (add @import)
+- Font-size: 1.4rem, font-weight: 700, text-align: center
+- Color: #111 — but wrap the app name word in a <span class="accent"> 
+  with color: #0e9090
+- Margin-bottom: 0.4rem
+
+=== SUBTEXT (.auth-subtitle) — new element ===
+- Font-size: 0.82rem, color: #9ca3af, text-align: center
+- Margin-bottom: 1.6rem
+
+=== FORM LABELS (.form-group label) ===
+- Font-size: 0.8rem, font-weight: 600, color: #374151
+- Letter-spacing: normal (remove uppercase/monospace)
+- Margin-bottom: 0.4rem
+
+=== INPUTS (.form-group input) ===
+- Background: #ffffff
+- Border: 1px solid #d1d5db
+- Border-radius: 10px
+- Padding: 0.72rem 1rem
+- Font-size: 0.92rem, color: #111
+- Placeholder color: #9ca3af
+- Focus: border-color #0e9090, box-shadow 0 0 0 3px rgba(14,144,144,0.12), 
+  outline none
+
+=== PRIMARY BUTTON (form > button[type=submit], .auth-card > form > button) ===
+- Background: #111111
+- Color: #ffffff
+- Border: none
+- Border-radius: 999px
+- Padding: 0.82rem 1rem
+- Font-size: 0.9rem, font-weight: 600
+- Width: 100%
+- Margin-top: 0.5rem
+- Cursor: pointer
+- Transition: background 0.2s
+- Hover: background #333333
+- Disabled: opacity 0.4
+
+=== SOCIAL BUTTONS ROW (.social-row) — new element ===
+- Display: flex, gap: 0.6rem, margin-top: 0.75rem
+- Each button (.social-btn): flex 1, background white, border 1px solid #e5e7eb,
+  border-radius: 10px, padding: 0.6rem, font-size: 0.82rem, font-weight: 500,
+  color: #374151, display flex, align-items center, justify-content center, 
+  gap 0.4rem, cursor pointer
+- Hover: background #f9fafb, border-color #d1d5db
+- Add Google and Github SVG icons inline (16px)
+NOTE: Add .social-row div and two .social-btn buttons inside Login.tsx 
+and Register.tsx just below the submit button
+
+=== SWITCH LINK (.switch-auth) ===
+- Font-size: 0.84rem, color: #6b7280, text-align: center, margin-top: 1.2rem
+- The clickable button: color #0e9090, font-weight: 700, background none, 
+  border none, cursor pointer, no underline by default, hover: underline
+
+=== ERROR / SUCCESS MESSAGES ===
+- .error-message: background #fef2f2, border 1px solid #fecaca, 
+  color #b91c1c, border-radius 10px, padding 0.65rem 0.9rem, font-size 0.82rem
+- .success-message: background #f0fdf4, border 1px solid #bbf7d0, 
+  color #15803d, border-radius 10px, padding 0.65rem 0.9rem, font-size 0.82rem
+
+=== RESPONSIVE ===
+- Below 768px: .auth-container flex-direction column
+- .auth-left: display none on mobile
+- .auth-right: width 100%, min-height 100vh, background #f4f6f8
+- .auth-card: margin 1.5rem, padding 1.8rem 1.4rem
+
+=== IMPORTANT RULES ===
+- Do NOT change any TypeScript logic in Login.tsx or Register.tsx
+- Only add the new wrapper divs (.auth-left, .auth-right, .auth-logo, 
+  .auth-subtitle, .social-row) to the JSX — no logic changes
+- All existing class names must still work
+- Add Google Fonts import at top of Auth.css:
+  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap');
+  Apply font-family: 'DM Sans', sans-serif to body or .auth-container
+
+---
+
+Slack Google AdsZendesk Shopify
+Dashboard Preview remove this words in login or register page
