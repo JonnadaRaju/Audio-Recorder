@@ -1,0 +1,43 @@
+Two things to fix — one in TSX, one in CSS.
+
+=== FIX 1: Login.tsx and Register.tsx ===
+Inside the .auth-left div, find the three .feature-item elements.
+Remove the emoji characters (🎙️ 🎥 🤖) from the text content completely.
+The text should be plain:
+  "High-quality audio recording"
+  "Video capture with live preview"
+  "AI assistant for your recordings"
+The CSS ::before dot will handle the icon.
+
+=== FIX 2: Auth.css ===
+
+Fix the vertical spacing so content fills the full left panel height:
+
+.auth-left {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 3rem 2.5rem;
+}
+
+.auth-left-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.auth-copyright {
+  margin-top: 0;
+  padding-top: 1rem;
+}
+
+Fix waveform bar visibility:
+.wave-block        { background: rgba(255,255,255,0.4);  height: 40%; }
+.wave-block.tall   { background: rgba(255,255,255,1);    height: 100%; }
+.wave-block.medium { background: rgba(255,255,255,0.8);  height: 65%; }
+.wave-block.short  { background: rgba(255,255,255,0.5);  height: 25%; }
+
+Fix mock card title bars:
+.mock-bar        { background: rgba(255,255,255,0.8); height: 10px; }
+.mock-bar.short  { background: rgba(255,255,255,0.55); width: 45%; }
