@@ -28,6 +28,13 @@
       "context": "/bb/39fb558212/2/context.md",
       "content_hash": "/bb/39fb558212/2/content_hash.txt",
       "prompt": "/bb/39fb558212/2/prompt.txt"
+    },
+    {
+      "metadata": "/bb/39fb558212/3/metadata.json",
+      "transcript": "/bb/39fb558212/3/full.jsonl",
+      "context": "/bb/39fb558212/3/context.md",
+      "content_hash": "/bb/39fb558212/3/content_hash.txt",
+      "prompt": "/bb/39fb558212/3/prompt.txt"
     }
   ],
   "token_usage": {
