@@ -1,0 +1,538 @@
+{
+  "info": {
+    "id": "ses_341a26499ffehfDA6v4U6xeRWO",
+    "slug": "brave-tiger",
+    "projectID": "4f1d95a32ecc9019319590cad4e671b9d88d4b75",
+    "directory": "/mnt/c/Users/jonad/Audio-Generation",
+    "title": "Git add and commit files one by one",
+    "version": "1.2.17",
+    "summary": {
+      "additions": 0,
+      "deletions": 0,
+      "files": 0
+    },
+    "time": {
+      "created": 1772720331622,
+      "updated": 1772720471815
+    }
+  },
+  "messages": [
+    {
+      "info": {
+        "role": "user",
+        "time": {
+          "created": 1772720331674
+        },
+        "summary": {
+          "diffs": []
+        },
+        "agent": "build",
+        "model": {
+          "providerID": "opencode",
+          "modelID": "big-pickle"
+        },
+        "variant": "high",
+        "id": "msg_cbe5d9b70001qvEXf7t1FSDDKZ",
+        "sessionID": "ses_341a26499ffehfDA6v4U6xeRWO"
+      },
+      "parts": [
+        {
+          "type": "text",
+          "text": "git add and commit files one by one",
+          "id": "prt_cbe5d9b71001Ma077kwoskWFe3",
+          "sessionID": "ses_341a26499ffehfDA6v4U6xeRWO",
+          "messageID": "msg_cbe5d9b70001qvEXf7t1FSDDKZ"
+        }
+      ]
+    },
+    {
+      "info": {
+        "role": "assistant",
+        "time": {
+          "created": 1772720331716,
+          "completed": 1772720337527
+        },
+        "parentID": "msg_cbe5d9b70001qvEXf7t1FSDDKZ",
+        "modelID": "big-pickle",
+        "providerID": "opencode",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/mnt/c/Users/jonad/Audio-Generation",
+          "root": "/mnt/c/Users/jonad/Audio-Generation"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 11436,
+          "input": 78,
+          "output": 68,
+          "reasoning": 0,
+          "cache": {
+            "read": 11277,
+            "write": 13
+          }
+        },
+        "variant": "high",
+        "finish": "tool-calls",
+        "id": "REDACTED",
+        "sessionID": "ses_341a26499ffehfDA6v4U6xeRWO"
+      },
+      "parts": [
+        {
+          "type": "step-start",
+          "snapshot": "af4d141a4f3a4edb7dc5d3abca0b3d1b678021fe",
+          "id": "REDACTED",
+          "sessionID": "ses_341a26499ffehfDA6v4U6xeRWO",
+          "messageID": "REDACTED"
+        },
+        {
+          "type": "reasoning",
+          "text": "The user wants to add and commit files one by one. Let me first check the git status to see what files are available to commit.",
+          "metadata": {
+            "anthropic": {
+              "signature": "d973240d0ad1c09012202063d23d6dbb57cf8bb9f0b3965dfdebb0db51299b9c"
+            }
+          },
+          "time": {
+            "start": 1772720335419,
+            "end": 1772720335426
+          },
+          "id": "prt_cbe5daa3b001NWz3VT8m7bMLpa",
+          "sessionID": "ses_341a26499ffehfDA6v4U6xeRWO",
+          "messageID": "REDACTED"
+        },
+        {
+          "type": "tool",
+          "callID": "call_function_huux5qvbxwdp_1",
+          "tool": "bash",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "git status",
+              "description": "Show working tree status"
+            },
+            "output": "On branch main\nYour branch is up to date with 'origin/main'.\n\nChanges not staged for commit:\n  (use \"git add <file>...\" to update what will be committed)\n  (use \"git restore <file>...\" to discard changes in working directory)\n\tmodified:   frontend/src/pages/Auth.css\n\tmodified:   frontend/src/pages/Login.tsx\n\tmodified:   frontend/src/pages/Register.tsx\n\nno changes added to commit (use \"git add\" and/or \"git commit -a\")\n",
+            "title": "Show working tree status",
+            "metadata": {
+              "output": "On branch main\nYour branch is up to date with 'origin/main'.\n\nChanges not staged for commit:\n  (use \"git add <file>...\" to update what will be committed)\n  (use \"git restore <file>...\" to discard changes in working directory)\n\tmodified:   frontend/src/pages/Auth.css\n\tmodified:   frontend/src/pages/Login.tsx\n\tmodified:   frontend/src/pages/Register.tsx\n\nno changes added to commit (use \"git add\" and/or \"git commit -a\")\n",
+              "exit": 0,
+              "description": "Show working tree status",
+              "truncated": false
+            },
+            "time": {
+              "start": 1772720335447,
+              "end": 1772720336310
+            }
+          },
+          "id": "REDACTED",
+          "sessionID": "ses_341a26499ffehfDA6v4U6xeRWO",
+          "messageID": "REDACTED"
+        },
+        {
+          "type": "step-finish",
+          "reason": "tool-calls",
+          "snapshot": "af4d141a4f3a4edb7dc5d3abca0b3d1b678021fe",
+          "cost": 0,
+          "tokens": {
+            "total": 11436,
+            "input": 78,
+            "output": 68,
+            "reasoning": 0,
+            "cache": {
+              "read": 11277,
+              "write": 13
+            }
+          },
+          "id": "prt_cbe5dadc0001eWNuWMGCwuBjz7",
+          "sessionID": "ses_341a26499ffehfDA6v4U6xeRWO",
+          "messageID": "REDACTED"
+        }
+      ]
+    },
+    {
+      "info": {
+        "role": "assistant",
+        "time": {
+          "created": 1772720337531,
+          "completed": 1772720342065
+        },
+        "parentID": "msg_cbe5d9b70001qvEXf7t1FSDDKZ",
+        "modelID": "big-pickle",
+        "providerID": "opencode",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/mnt/c/Users/jonad/Audio-Generation",
+          "root": "/mnt/c/Users/jonad/Audio-Generation"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 11667,
+          "input": 197,
+          "output": 107,
+          "reasoning": 0,
+          "cache": {
+            "read": 11277,
+            "write": 86
+          }
+        },
+        "variant": "high",
+        "finish": "tool-calls",
+        "id": "msg_cbe5db27b00176h7WpVhYIpAHN",
+        "sessionID": "ses_341a26499ffehfDA6v4U6xeRWO"
+      },
+      "parts": [
+        {
+          "type": "step-start",
+          "snapshot": "af4d141a4f3a4edb7dc5d3abca0b3d1b678021fe",
+          "id": "prt_cbe5dbb59001bT6e3i2WXMtd3p",
+          "sessionID": "ses_341a26499ffehfDA6v4U6xeRWO",
+          "messageID": "msg_cbe5db27b00176h7WpVhYIpAHN"
+        },
+        {
+          "type": "reasoning",
+          "text": "The user wants to add and commit files one by one. There are 3 modified files:\n1. frontend/src/pages/Auth.css\n2. frontend/src/pages/Login.tsx\n3. frontend/src/pages/Register.tsx\n\nLet me also check the recent commit messages to understand the style being used.",
+          "metadata": {
+            "anthropic": {
+              "signature": "294b04931b6b3f43f0ce1d4b6c7d6bca0437f6914105a6269b3ce655ccd4b51a"
+            }
+          },
+          "time": {
+            "start": 1772720339802,
+            "end": 1772720340202
+          },
+          "id": "prt_cbe5dbb5a001kzJ3S1xvWQxnYp",
+          "sessionID": "ses_341a26499ffehfDA6v4U6xeRWO",
+          "messageID": "msg_cbe5db27b00176h7WpVhYIpAHN"
+        },
+        {
+          "type": "tool",
+          "callID": "call_function_kgyk4spj2mg5_1",
+          "tool": "bash",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "git log --oneline -5",
+              "description": "Show recent commit messages"
+            },
+            "output": "d30e0c0 Update frontend styling\ne0e068e Restructure dashboard layout\nf691406 Refresh dashboard styling\nd2f62c7 Deduplicate dashboard layout\n51f48ef Respect vector flag in models\n",
+            "title": "Show recent commit messages",
+            "metadata": {
+              "output": "d30e0c0 Update frontend styling\ne0e068e Restructure dashboard layout\nf691406 Refresh dashboard styling\nd2f62c7 Deduplicate dashboard layout\n51f48ef Respect vector flag in models\n",
+              "exit": 0,
+              "description": "Show recent commit messages",
+              "truncated": false
+            },
+            "time": {
+              "start": 1772720340581,
+              "end": 1772720340872
+            }
+          },
+          "id": "prt_cbe5dbcec001IzNa0I7USz4iCI",
+          "sessionID": "ses_341a26499ffehfDA6v4U6xeRWO",
+          "messageID": "msg_cbe5db27b00176h7WpVhYIpAHN"
+        },
+        {
+          "type": "step-finish",
+          "reason": "tool-calls",
+          "snapshot": "af4d141a4f3a4edb7dc5d3abca0b3d1b678021fe",
+          "cost": 0,
+          "tokens": {
+            "total": 11667,
+            "input": 197,
+            "output": 107,
+            "reasoning": 0,
+            "cache": {
+              "read": 11277,
+              "write": 86
+            }
+          },
+          "id": "prt_cbe5dbf8a0015BTAORHFWtb2FS",
+          "sessionID": "ses_341a26499ffehfDA6v4U6xeRWO",
+          "messageID": "msg_cbe5db27b00176h7WpVhYIpAHN"
+        }
+      ]
+    },
+    {
+      "info": {
+        "role": "assistant",
+        "time": {
+          "created": 1772720342069,
+          "completed": 1772720412943
+        },
+        "parentID": "msg_cbe5d9b70001qvEXf7t1FSDDKZ",
+        "modelID": "big-pickle",
+        "providerID": "opencode",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/mnt/c/Users/jonad/Audio-Generation",
+          "root": "/mnt/c/Users/jonad/Audio-Generation"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 11809,
+          "input": 136,
+          "output": 79,
+          "reasoning": 0,
+          "cache": {
+            "read": 11290,
+            "write": 304
+          }
+        },
+        "variant": "high",
+        "finish": "tool-calls",
+        "id": "msg_cbe5dc435001uTcvXBcEupNkWN",
+        "sessionID": "ses_341a26499ffehfDA6v4U6xeRWO"
+      },
+      "parts": [
+        {
+          "type": "step-start",
+          "snapshot": "af4d141a4f3a4edb7dc5d3abca0b3d1b678021fe",
+          "id": "prt_cbe5dcd7300122RQLaptAriWXa",
+          "sessionID": "ses_341a26499ffehfDA6v4U6xeRWO",
+          "messageID": "msg_cbe5dc435001uTcvXBcEupNkWN"
+        },
+        {
+          "type": "reasoning",
+          "text": " I'll addNow and commit each file one by one. Let me start with the first file - Auth.css.",
+          "metadata": {
+            "anthropic": {
+              "signature": "21abb47fb1dd0e92d5a01a49143dcbb58abc3b53debfd6e839da70e6e704a23a"
+            }
+          },
+          "time": {
+            "start": 1772720344437,
+            "end": 1772720344439
+          },
+          "id": "prt_cbe5dcd75001V6QOEivpAw4Fsc",
+          "sessionID": "ses_341a26499ffehfDA6v4U6xeRWO",
+          "messageID": "msg_cbe5dc435001uTcvXBcEupNkWN"
+        },
+        {
+          "type": "tool",
+          "callID": "call_function_gd17wf7t7bcm_1",
+          "tool": "bash",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "git add frontend/src/pages/Auth.css && git commit -m \"Update Auth page styling\"",
+              "description": "Stage and commit Auth.css"
+            },
+            "output": "[main 0099b3c] Update Auth page styling\n 1 file changed, 349 insertions(+), 122 deletions(-)\n",
+            "title": "Stage and commit Auth.css",
+            "metadata": {
+              "output": "[main 0099b3c] Update Auth page styling\n 1 file changed, 349 insertions(+), 122 deletions(-)\n",
+              "exit": 0,
+              "description": "Stage and commit Auth.css",
+              "truncated": false
+            },
+            "time": {
+              "start": 1772720344829,
+              "end": 1772720411758
+            }
+          },
+          "id": "prt_cbe5dce4a001LZDupqQOQYD0Pc",
+          "sessionID": "ses_341a26499ffehfDA6v4U6xeRWO",
+          "messageID": "msg_cbe5dc435001uTcvXBcEupNkWN"
+        },
+        {
+          "type": "step-finish",
+          "reason": "tool-calls",
+          "snapshot": "af4d141a4f3a4edb7dc5d3abca0b3d1b678021fe",
+          "cost": 0,
+          "tokens": {
+            "total": 11809,
+            "input": 136,
+            "output": 79,
+            "reasoning": 0,
+            "cache": {
+              "read": 11290,
+              "write": 304
+            }
+          },
+          "id": "REDACTED",
+          "sessionID": "ses_341a26499ffehfDA6v4U6xeRWO",
+          "messageID": "msg_cbe5dc435001uTcvXBcEupNkWN"
+        }
+      ]
+    },
+    {
+      "info": {
+        "role": "assistant",
+        "time": {
+          "created": 1772720412948,
+          "completed": 1772720471780
+        },
+        "parentID": "msg_cbe5d9b70001qvEXf7t1FSDDKZ",
+        "modelID": "big-pickle",
+        "providerID": "opencode",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/mnt/c/Users/jonad/Audio-Generation",
+          "root": "/mnt/c/Users/jonad/Audio-Generation"
+        },
+        "cost": 0,
+        "tokens": {
+          "total": 11921,
+          "input": 116,
+          "output": 69,
+          "reasoning": 0,
+          "cache": {
+            "read": 11482,
+            "write": 254
+          }
+        },
+        "variant": "high",
+        "finish": "tool-calls",
+        "id": "REDACTED",
+        "sessionID": "ses_341a26499ffehfDA6v4U6xeRWO"
+      },
+      "parts": [
+        {
+          "type": "step-start",
+          "snapshot": "af4d141a4f3a4edb7dc5d3abca0b3d1b678021fe",
+          "id": "prt_cbe5ee3de00161WNvQBMAI851m",
+          "sessionID": "ses_341a26499ffehfDA6v4U6xeRWO",
+          "messageID": "REDACTED"
+        },
+        {
+          "type": "reasoning",
+          "text": "First file committed. Now let me do Login.tsx.",
+          "metadata": {
+            "anthropic": {
+              "signature": "fa32cbdefea0742d825f884ab6819fef1003d8e93161151e12fd49a60f3281bc"
+            }
+          },
+          "time": {
+            "start": 1772720415712,
+            "end": 1772720415756
+          },
+          "id": "prt_cbe5ee3e0001jb42FOCBuasZPW",
+          "sessionID": "ses_341a26499ffehfDA6v4U6xeRWO",
+          "messageID": "REDACTED"
+        },
+        {
+          "type": "tool",
+          "callID": "call_function_mkzajg1g03le_1",
+          "tool": "bash",
+          "state": {
+            "status": "completed",
+            "input": {
+              "command": "git add frontend/src/pages/Login.tsx && git commit -m \"Update Login page\"",
+              "description": "Stage and commit Login.tsx"
+            },
+            "output": "[main 88590e1] Update Login page\n 1 file changed, 89 insertions(+), 31 deletions(-)\n",
+            "title": "Stage and commit Login.tsx",
+            "metadata": {
+              "output": "[main 88590e1] Update Login page\n 1 file changed, 89 insertions(+), 31 deletions(-)\n",
+              "exit": 0,
+              "description": "Stage and commit Login.tsx",
+              "truncated": false
+            },
+            "time": {
+              "start": 1772720416221,
+              "end": 1772720470616
+            }
+          },
+          "id": "prt_cbe5ee40e001QNmMm1Fjm4Zy0O",
+          "sessionID": "ses_341a26499ffehfDA6v4U6xeRWO",
+          "messageID": "REDACTED"
+        },
+        {
+          "type": "step-finish",
+          "reason": "tool-calls",
+          "snapshot": "af4d141a4f3a4edb7dc5d3abca0b3d1b678021fe",
+          "cost": 0,
+          "tokens": {
+            "total": 11921,
+            "input": 116,
+            "output": 69,
+            "reasoning": 0,
+            "cache": {
+              "read": 11482,
+              "write": 254
+            }
+          },
+          "id": "prt_cbe5fba5a001QLPrJw4wVpR3NR",
+          "sessionID": "ses_341a26499ffehfDA6v4U6xeRWO",
+          "messageID": "REDACTED"
+        }
+      ]
+    },
+    {
+      "info": {
+        "role": "assistant",
+        "time": {
+          "created": 1772720471784
+        },
+        "parentID": "msg_cbe5d9b70001qvEXf7t1FSDDKZ",
+        "modelID": "big-pickle",
+        "providerID": "opencode",
+        "mode": "build",
+        "agent": "build",
+        "path": {
+          "cwd": "/mnt/c/Users/jonad/Audio-Generation",
+          "root": "/mnt/c/Users/jonad/Audio-Generation"
+        },
+        "cost": 0,
+        "tokens": {
+          "input": 0,
+          "output": 0,
+          "reasoning": 0,
+          "cache": {
+            "read": 0,
+            "write": 0
+          }
+        },
+        "variant": "high",
+        "id": "msg_cbe5fbee8001vnMovAmCVKtmCP",
+        "sessionID": "ses_341a26499ffehfDA6v4U6xeRWO"
+      },
+      "parts": [
+        {
+          "type": "step-start",
+          "snapshot": "af4d141a4f3a4edb7dc5d3abca0b3d1b678021fe",
+          "id": "REDACTED",
+          "sessionID": "ses_341a26499ffehfDA6v4U6xeRWO",
+          "messageID": "msg_cbe5fbee8001vnMovAmCVKtmCP"
+        },
+        {
+          "type": "reasoning",
+          "text": "Second file committed. Now the last one - Register.tsx.",
+          "metadata": {
+            "anthropic": {
+              "signature": "a993dc2bf319107386a995379cbb27fa618ac0937f3fa2411f05d2f1877e685d"
+            }
+          },
+          "time": {
+            "start": 1772720476804,
+            "end": 1772720476807
+          },
+          "id": "prt_cbe5fd284001vRr5teETqwNU5H",
+          "sessionID": "ses_341a26499ffehfDA6v4U6xeRWO",
+          "messageID": "msg_cbe5fbee8001vnMovAmCVKtmCP"
+        },
+        {
+          "type": "tool",
+          "callID": "call_function_h8t8slc87pwi_1",
+          "tool": "bash",
+          "state": {
+            "status": "running",
+            "input": {
+              "command": "git add frontend/src/pages/Register.tsx && git commit -m \"Update Register page\"",
+              "description": "Stage and commit Register.tsx"
+            },
+            "time": {
+              "start": 1772720477401
+            }
+          },
+          "id": "prt_cbe5fd288001h2iAh8J3MtEpJG",
+          "sessionID": "ses_341a26499ffehfDA6v4U6xeRWO",
+          "messageID": "msg_cbe5fbee8001vnMovAmCVKtmCP"
+        }
+      ]
+    }
+  ]
+}
