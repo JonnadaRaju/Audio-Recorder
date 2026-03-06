@@ -24,7 +24,10 @@ class User(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String(255), unique=True, index=True, nullable=False)
-    password_hash = Column(String(255), nullable=False)
+    password_hash = Column(String(255), nullable=True)
+    provider = Column(String(50), nullable=True)
+    provider_id = Column(String(255), nullable=True)
+    provider_email = Column(String(255), nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow)
 
     recordings = relationship("AudioRecording", back_populates="user")
