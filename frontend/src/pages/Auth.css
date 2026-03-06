@@ -30,14 +30,17 @@ body {
     ),
     linear-gradient(160deg, #0a6b6b, #0e9090, #1aadad);
   background-size: 28px 28px, 100% 100%;
-  position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  min-height: 100vh;
   padding: 3rem 2.5rem;
 }
 
 .auth-left-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   position: relative;
   z-index: 2;
 }
@@ -82,18 +85,27 @@ body {
   width: fit-content;
 }
 
+.feature-item::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.9);
+  flex-shrink: 0;
+}
+
 .mock-visual {
   background: rgba(255,255,255,0.1);
   border: 1px solid rgba(255,255,255,0.18);
   border-radius: 18px;
   padding: 1.4rem 1.6rem;
-  margin-top: 2.5rem;
+  margin-top: 1.5rem;
   backdrop-filter: blur(10px);
 }
 
 .mock-bar {
+  background: rgba(255,255,255,0.8);
   height: 10px;
-  background: rgba(255,255,255,0.5);
   border-radius: 999px;
   margin-bottom: 0.6rem;
   width: 70%;
@@ -101,36 +113,38 @@ body {
 
 .mock-bar.short {
   width: 45%;
-  background: rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.55);
 }
 
 .mock-wave {
   display: flex;
   align-items: flex-end;
   gap: 5px;
+  height: 64px;
   margin-top: 1rem;
-  height: 48px;
 }
 
-.wave-block {
-  flex: 1;
-  background: rgba(255,255,255,0.55);
-  border-radius: 4px;
-  height: 40%;
+.wave-block { 
+  flex: 1; 
+  border-radius: 4px 4px 2px 2px;
 }
 
-.wave-block.tall {
-  height: 100%;
-  background: rgba(255,255,255,0.8);
+.wave-block:nth-child(1) { background: #ff6b6b; height: 35% !important; }
+.wave-block:nth-child(2) { background: #ff9f43; height: 90% !important; }
+.wave-block:nth-child(3) { background: #ffd32a; height: 55% !important; }
+.wave-block:nth-child(4) { background: #0be881; height: 100% !important; }
+.wave-block:nth-child(5) { background: #00d2d3; height: 30% !important; }
+.wave-block:nth-child(6) { background: #54a0ff; height: 70% !important; }
+.wave-block:nth-child(7) { background: #a29bfe; height: 90% !important; }
+.wave-block:nth-child(8) { background: #fd79a8; height: 42% !important; }
+
+@keyframes waveAnim {
+  0%, 100% { transform: scaleY(1);   opacity: 1;    }
+  50%       { transform: scaleY(0.7); opacity: 0.75; }
 }
 
-.wave-block.medium {
-  height: 65%;
-}
-
-.wave-block.short {
-  height: 25%;
-}
+.wave-block:nth-child(odd)  { animation: waveAnim 2.2s ease-in-out infinite; }
+.wave-block:nth-child(even) { animation: waveAnim 2.2s ease-in-out infinite 0.4s; }
 
 .mock-card {
   position: absolute;
@@ -208,7 +222,8 @@ body {
 .auth-left .auth-copyright {
   font-size: 0.72rem;
   color: rgba(255,255,255,0.35);
-  margin-top: 1.5rem;
+  margin-top: 0;
+  padding-top: 1rem;
 }
 
 .auth-right {
