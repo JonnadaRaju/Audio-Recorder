@@ -1,0 +1,32 @@
+{
+  "cli_version": "0.4.9",
+  "checkpoint_id": "b14b38236bf9",
+  "session_id": "ses_34479c919ffeXTl4W8LVC2i2YH",
+  "strategy": "manual-commit",
+  "created_at": "2026-03-06T05:49:59.002834766Z",
+  "branch": "main",
+  "checkpoints_count": 0,
+  "files_touched": [
+    "frontend/src/services/oauth.ts"
+  ],
+  "agent": "OpenCode",
+  "turn_id": "066fb1f79f93",
+  "checkpoint_transcript_start": 3,
+  "transcript_lines_at_start": 3,
+  "token_usage": {
+    "input_tokens": 0,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0,
+    "output_tokens": 0,
+    "api_call_count": 0
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-03-06T05:49:58.903160374Z",
+    "agent_lines": 161,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 161,
+    "agent_percentage": 100
+  }
+}
