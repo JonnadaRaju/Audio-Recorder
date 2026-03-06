@@ -1,0 +1,44 @@
+Fix these specific issues in Auth.css only. Do not touch any TSX files.
+
+1. WAVEFORM BARS — increase contrast so they're visible:
+   .wave-block         { background: rgba(255,255,255,0.5);  }
+   .wave-block.tall    { background: rgba(255,255,255,0.95); }
+   .wave-block.medium  { background: rgba(255,255,255,0.75); }
+   .wave-block.short   { background: rgba(255,255,255,0.35); }
+
+2. MOCK CARD title bars — make them visible:
+   .mock-bar       { background: rgba(255,255,255,0.7);  }
+   .mock-bar.short { background: rgba(255,255,255,0.45); }
+
+3. REDUCE gap between pills and mock card:
+   .mock-visual { margin-top: 1.5rem; }
+
+4. FILL vertical space — push copyright to bottom,
+   center the middle content:
+   .auth-left {
+     display: flex;
+     flex-direction: column;
+     justify-content: space-between;
+     min-height: 100vh;
+     padding: 3rem 2.5rem;
+   }
+   Wrap headline + subtext + pills + mock-visual 
+   in a single .auth-left-content div if not already,
+   so space-between pushes copyright to the very bottom.
+
+5. FIX broken emoji in feature pills — replace emoji 
+   characters with plain text icons using CSS ::before:
+   Remove emoji from the TSX text content.
+   Change the three feature items text to:
+     "High-quality audio recording"
+     "Video capture with live preview"  
+     "AI assistant for your recordings"
+   Add colored dot before each with CSS:
+   .feature-item::before {
+     content: '';
+     width: 7px;
+     height: 7px;
+     border-radius: 50%;
+     background: rgba(255,255,255,0.9);
+     flex-shrink: 0;
+   }
