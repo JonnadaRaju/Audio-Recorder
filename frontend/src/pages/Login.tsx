@@ -56,9 +56,9 @@ search your library instantly, and let AI answer
 questions about your recordings.</p>
           
           <div className="feature-list">
-            <div className="feature-item">🎙️ High-quality audio recording</div>
-            <div className="feature-item">🎥 Video capture with live preview</div>
-            <div className="feature-item">🤖 AI assistant for your recordings</div>
+            <div className="feature-item">High-quality audio recording</div>
+            <div className="feature-item">Video capture with live preview</div>
+            <div className="feature-item">AI assistant for your recordings</div>
           </div>
 
           <div className="mock-visual">
