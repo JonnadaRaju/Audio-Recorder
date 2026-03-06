@@ -1,0 +1,12 @@
+Explore this Audio-Generation codebase thoroughly. I need to understand:
+
+1. The overall project structure (directories, main files)
+2. The FastAPI backend structure (main.py, routers, models)
+3. The database models (SQLAlchemy models for User, AudioRecording)
+4. The existing audio endpoints and processing pipeline
+5. The MCP server setup and existing tools
+6. The AI agent implementation
+7. The CLI client implementation
+8. The React frontend structure
+
+Provide a comprehensive summary of each component with file paths and key details about how they work together.
