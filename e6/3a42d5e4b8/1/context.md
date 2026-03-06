@@ -1,0 +1,15 @@
+# Session Context
+
+## User Prompts
+
+### Prompt 1
+
+Welcome to AudioReach
+Enter your details to access your account
+
+Email
+jonnadaraju147@gmail.com
+Password
+•••••••••••
+Cannot reach API. Tried: http://localhost:8000 (Failed to fetch); http://127.0.0.1:8000 (Failed to fetch)
+
