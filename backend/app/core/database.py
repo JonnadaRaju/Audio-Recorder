@@ -7,7 +7,18 @@ from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 
-engine = create_async_engine(settings.DATABASE_URL, echo=True)
+
+def _normalize_async_database_url(database_url: str) -> str:
+    # Render commonly provides postgres:// or postgresql:// URLs.
+    # This app uses SQLAlchemy async engine, so force asyncpg driver when missing.
+    if database_url.startswith("postgres://"):
+        return database_url.replace("postgres://", "postgresql+asyncpg://", 1)
+    if database_url.startswith("postgresql://"):
+        return database_url.replace("postgresql://", "postgresql+asyncpg://", 1)
+    return database_url
+
+
+engine = create_async_engine(_normalize_async_database_url(settings.DATABASE_URL), echo=True)
 async_session_maker = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
 
